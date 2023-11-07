@@ -39,7 +39,7 @@ Contoh: `ShopCard` bisa jadi contoh Stateful Widget jika `item` berubah sepanjan
 - `Icon`: Widget yang menampilkan ikon.
 - `Padding`: Widget yang memberikan padding ke anaknya.
 - `Text`: Widget yang menampilkan teks.
-- `ColorScheme``: Ini adalah bagian dari tema yang digunakan untuk mengatur skema warna aplikasi, termasuk warna latar belakang dan teks.
+- `ColorScheme`: Ini adalah bagian dari tema yang digunakan untuk mengatur skema warna aplikasi, termasuk warna latar belakang dan teks.
 - `theme`: Ini adalah tema aplikasi yang digunakan untuk mengkustomisasi tampilan aplikasi.
 - `ShopItem`: Ini adalah class yang mendefinisikan item toko, termasuk atribut seperti nama, ikon, dan warna.
 - `ShopCard (Stateless Widget)`: Widget ini digunakan untuk menampilkan setiap item toko dalam bentuk kartu dan memiliki handler ketika diklik yang menampilkan snackbar.
@@ -50,20 +50,10 @@ Contoh: `ShopCard` bisa jadi contoh Stateful Widget jika `item` berubah sepanjan
 ### Membuat sebuah program Flutter baru dengan tema inventory seperti tugas-tugas sebelumnya.
 Menggunakan perintah `flutter create pokedex_mobile` di terminal.
 
-### Membuat tombol sederhana dengan ikon dan teks untuk melihat daftar item (Lihat Item)
-
-### Membuat tombol sederhana dengan ikon dan teks untuk menambah item (Tambah Item)
-
-### Membuat tombol sederhana dengan ikon dan teks untuk logout (Logout)
-
-### Memunculkan Snackbar dengan tulisan "Kamu telah menekan tombol Lihat Item" ketika tombol Lihat Item ditekan.
-
-### Memunculkan Snackbar dengan tulisan "Kamu telah menekan tombol Tambah Item" ketika tombol Tambah Item ditekan.
-
-### "Kamu telah menekan tombol Logout" ketika tombol Logout ditekan.
+### Membuat tombol sederhana dengan ikon dan teks untuk melihat daftar item (Lihat Item), menambah item (Tambah Item), dan logout (Logout)
 Dalam file `menu.dart`, tombol-tombol tersebut dibuat sebagai bagian dari `GridView` dalam `MyHomePage` widget. Setiap tombol adalah instance dari `ShopCard` widget yang mewakili item dalam daftar `items`.
 
-1. **Membuat 3 Tombol **: Daftar `items` dibuat dalam `MyHomePage` widget. Setiap item adalah instance dari `ShopItem` class yang memiliki nama, ikon, dan warna. 
+**Membuat 3 Tombol**: Daftar `items` dibuat dalam `MyHomePage` widget. Setiap item adalah instance dari `ShopItem` class yang memiliki nama, ikon, dan warna. 
 ```dart
 class ShopItem {
   final String name;
@@ -84,7 +74,7 @@ final List<ShopItem> items = [
 ];
 ```
 
-2. **Membuat GridView**: `GridView` dibuat dalam metode `build` dari `MyHomePage`. `GridView` berisi beberapa `ShopCard` yang dibuat dari daftar `items`.
+**Membuat GridView**: `GridView` dibuat dalam metode `build` dari `MyHomePage`. `GridView` berisi beberapa `ShopCard` yang dibuat dari daftar `items`.
 
 ```dart
 ...
@@ -102,7 +92,8 @@ GridView.count(
 ...
 ```
 
-3. **Membuat ShopCard**: `ShopCard` adalah widget yang mewakili setiap item dalam daftar `items`. Di dalam metode `build`, sebuah `Material` dibuat dengan `InkWell`. `InkWell` adalah widget yang merespons sentuhan. Ketika `InkWell` diklik, sebuah `SnackBar` ditampilkan dengan pesan "Kamu telah menekan tombol {nama item}!". Di dalam `InkWell`, ada `Container` yang berisi `Icon` dan `Text` dari `ShopItem`.
+### Memunculkan Snackbar dengan tulisan "Kamu telah menekan tombol {nama tombol}"
+**Membuat ShopCard**: `ShopCard` adalah widget yang mewakili setiap item dalam daftar `items`. Di dalam metode `build`, sebuah `Material` dibuat dengan `InkWell`. `InkWell` adalah widget yang merespons sentuhan. Ketika `InkWell` diklik, sebuah `SnackBar` ditampilkan dengan pesan "Kamu telah menekan tombol {nama item}!". Di dalam `InkWell`, ada `Container` yang berisi `Icon` dan `Text` dari `ShopItem`.
 
 ```dart
 class ShopCard extends StatelessWidget {
