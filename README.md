@@ -140,3 +140,456 @@ class ShopCard extends StatelessWidget {
     );
   }
 ```
+
+# TUGAS 8
+## Jelaskan perbedaan antara Navigator.push() dan Navigator.pushReplacement(), disertai dengan contoh mengenai penggunaan kedua metode tersebut yang tepat!
+`Navigator.push()` digunakan untuk menavigasi ke halaman baru dan menambahkannya ke tumpukan navigasi. Halaman sebelumnya tetap ada di tumpukan dan pengguna dapat kembali ke halaman tersebut dengan tombol kembali.<br>
+`Navigator.pushReplacement()` digunakan untuk menavigasi ke halaman baru dan menggantikan halaman saat ini di tumpukan navigasi. Halaman sebelumnya dihapus dari tumpukan dan pengguna tidak dapat kembali ke halaman tersebut.
+
+Contoh penggunaan:
+
+```dart
+// Menggunakan Navigator.push()
+Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) => SecondPage()),
+);
+
+// Menggunakan Navigator.pushReplacement()
+Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => SecondPage()),
+);
+```
+## Jelaskan masing-masing layout widget pada Flutter dan konteks penggunaannya masing-masing!
+1. **Container**: Digunakan untuk mengelompokkan widget dan memberikan padding, margin, atau dekorasi. Misalnya untuk memberikan padding ke `Text` widget.
+
+2. **Row dan Column**: Digunakan untuk menata widget secara horizontal (`Row`) dan vertikal (`Column`). Misalnya untuk menampilkan ikon dan teks secara berdampingan.
+
+3. **Stack**: Digunakan untuk menumpuk beberapa widget di atas satu sama lain. Misalnya untuk menempatkan teks di atas gambar.
+
+4. **GridView**: Digunakan untuk menampilkan item dalam bentuk grid. Misalnya untuk menampilkan galeri foto.
+
+5. **ListView**: Digunakan untuk menampilkan item dalam bentuk list. Misalnya untuk menampilkan daftar pesan dalam aplikasi chat.
+
+6. **Card**: Digunakan untuk menampilkan informasi dalam bentuk kartu. Misalnya untuk menampilkan informasi kontak.
+
+7. **Scaffold**: Digunakan untuk membuat struktur dasar aplikasi, seperti app bar, body, dan floating action button. Misalnya untuk membuat halaman dengan app bar dan body.
+
+8. **AppBar**: Digunakan untuk menampilkan bar di bagian atas halaman. Misalnya untuk menampilkan judul halaman dan action button.
+
+## Sebutkan apa saja elemen input pada form yang kamu pakai pada tugas kali ini dan jelaskan mengapa kamu menggunakan elemen input tersebut!
+Semua input yang diperlukan adalah berupa teks dalam bentuk string dan integer, maka digunakan `TextField` yang diwrap oleh `FormField` atau `FormField` yang berisi `TextField` yaitu `TextFormField`
+
+## Bagaimana penerapan clean architecture pada aplikasi Flutter?
+**1. Gambaran Clean Architecture:**<br>
+Separation of Concerns:<br>
+Clean Architecture mengikuti prinsip Separation of Concerns, membagi perangkat lunak menjadi lapisan.
+Tujuannya adalah memiliki lapisan yang terorganisir dengan baik, memungkinkan penggunaan ulang, pengembangan independen, skalabilitas, keterbacaan, pengujian, dan pemeliharaan yang mudah.
+
+**2. Lapisan-lapisan Clean Architecture di Flutter:**<br>
+**Lapisan Fitur:**
+- Lapisan Presentasi:
+  - Berisi UI dan penangan acara.
+  - Menggunakan pola manajemen status seperti BLoC, Provider, GetX.
+  - Termasuk halaman, manajemen status, dan widget khusus yang diperlukan oleh halaman.
+
+**Lapisan Domain:**
+- Lapisan Logika Bisnis:
+  - Berisi Entitas, Kasus Pengguna, dan Antarmuka Repositori.
+  - Ditulis secara murni dalam Dart tanpa elemen Flutter.
+  - Berfokus pada aturan bisnis aplikasi tertentu.
+
+**Lapisan Data:**
+- Lapisan Pengambilan Data:
+  - Bertanggung jawab atas pengambilan data dari panggilan API dan basis data lokal.
+  - Termasuk implementasi repositori, model DTO, sumber data (remote dan lokal), dan pemeta.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial)
+
+### Membuat minimal satu halaman baru pada aplikasi, yaitu halaman formulir tambah item baru.
+Membuat file `pokedex_form.dart` pada direktori 'lib/screens' yang berisi kode:
+```dart
+import 'package:flutter/material.dart';
+import 'package:pokedex_mobile/models/pokedex_models.dart';
+import 'package:pokedex_mobile/widgets/left_drawer.dart';
+import 'package:flutter/services.dart';
+
+List<Pokemon> pokeList = [];
+
+class PokeFormPage extends StatefulWidget {
+  const PokeFormPage({super.key});
+
+  @override
+  State<PokeFormPage> createState() => _PokeFormPageState();
+}
+
+class _PokeFormPageState extends State<PokeFormPage> {
+  final _formKey = GlobalKey<FormState>();
+  String _name = "";
+  int _amount = 0;
+  String _description = "";
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            'Form Tambah Pokemon',
+          ),
+        ),
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+      ),
+      drawer: const LeftDrawer(),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Nama Pokemon",
+                  labelText: "Nama Pokemon",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                onChanged: (String? value) {
+                  setState(() {
+                    _name = value!;
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Nama tidak boleh kosong!";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Jumlah",
+                  labelText: "Jumlah",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                onChanged: (String? value) {
+                  setState(() {
+                    _amount = int.parse(value!);
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Jumlah tidak boleh kosong!";
+                  }
+                  if (int.tryParse(value) == null) {
+                    return "Jumlah harus berupa angka!";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Deskripsi",
+                  labelText: "Deskripsi",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                onChanged: (String? value) {
+                  setState(() {
+                    _description = value!;
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Deskripsi tidak boleh kosong!";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.indigo),
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Pokemon newPokemon =
+                          Pokemon(_name, _amount, _description);
+                      pokeList.add(newPokemon);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Pokemon berhasil tersimpan'),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Nama: $_name'),
+                                  Text('Jumlah: $_amount'),
+                                  Text('Deskripsi: $_description'),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                    _formKey.currentState!.reset();
+                  },
+                  child: const Text(
+                    "Save",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )),
+      ),
+    );
+  }
+}
+```
+
+### Mengarahkan pengguna ke halaman form tambah item baru ketika menekan tombol `Tambah Item` pada halaman utama.
+- Menambahkan kode berikut pada bagian `onTap()` milik class `PokeCard` dalam file `pokedex_card.dart`
+```dart
+          if (item.name == "Tambah Pokemon") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PokeFormPage(),
+              ),
+            );
+          }
+``` 
+
+### Memunculkan data sesuai isi dari formulir yang diisi dalam sebuah `pop-up` setelah menekan tombol `Save` pada halaman formulir tambah item baru.
+- Menambahkan kode berikut ke dalam file `pokedex_form.dart`
+```dart
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Pokemon newPokemon =
+                          Pokemon(_name, _amount, _description);
+                      pokeList.add(newPokemon);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Pokemon berhasil tersimpan'),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Nama: $_name'),
+                                  Text('Jumlah: $_amount'),
+                                  Text('Deskripsi: $_description'),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    _formKey.currentState!.reset();
+                    }
+                    else {
+                      // Munculkan popup jika validasi gagal
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Gagal menyimpan pokemon'),
+                            content: const Text(
+                                'Pastikan semua field terisi dengan benar!'),
+                            actions: [
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+```
+
+### Membuat sebuah drawer pada aplikasi 
+```dart
+...
+          ListTile(
+            leading: const Icon(Icons.home_outlined),
+            title: const Text('Halaman Utama'),
+            // Bagian redirection ke MyHomePage
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(),
+                  ));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.add_shopping_cart),
+            title: const Text('Tambah Pokemon'),
+            // Bagian redirection ke ShopFormPage
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PokeFormPage(),
+                  ));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.checklist),
+            title: const Text('Lihat Pokemon'),
+            // Bagian redirection ke PokeListPage
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PokeListPage(pokeList: pokeList),
+                  ));
+            },
+          ),
+...
+```
+
+## BONUS
+### Membuat sebuah halaman baru, yaitu halaman daftar item yang sudah dibuat dengan isi halamannya adalah setiap data produk yang sudah pernah dibuat.
+Membuat file `pokedex_show` dalam direktori screens:
+```dart
+import 'package:flutter/material.dart';
+import 'package:pokedex_mobile/models/pokedex_models.dart';
+import 'package:pokedex_mobile/widgets/left_drawer.dart';
+
+class PokeListPage extends StatelessWidget {
+  final List<Pokemon> pokeList;
+
+  const PokeListPage({Key? key, required this.pokeList}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            'Pokemon List',
+          ),
+        ),
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+      ),
+      drawer: const LeftDrawer(),
+      body: ListView.builder(
+        itemCount: pokeList.length,
+        itemBuilder: (context, index) {
+          return Card(
+            elevation: 5,
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            child: ListTile(
+              title: Text(pokeList[index].name),
+              subtitle: Text(
+                  'Jumlah: ${pokeList[index].amount} | Deskripsi: ${pokeList[index].description}'),
+              onTap: () {
+                // Menampilkan pop up informasi pokemon
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text(pokeList[index].name),
+                      content: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Jumlah: ${pokeList[index].amount}'),
+                          Text('Deskripsi: ${pokeList[index].description}'),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Tutup'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+```
+
+Tambahkan file `pokedex_models` dalam direktori models:
+```dart
+class Pokemon {
+  final String name;
+  final int amount;
+  final String description;
+
+  Pokemon(this.name, this.amount, this.description);
+}
+```
+### Mengarahkan pengguna ke halaman tersebut jika menekan tombol Lihat Produk pada halaman utama atau drawer.
+```dart
+          ListTile(
+            leading: const Icon(Icons.checklist),
+            title: const Text('Lihat Pokemon'),
+            // Bagian redirection ke PokeListPage
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PokeListPage(pokeList: pokeList),
+                  ));
+            },
+          ),
+```

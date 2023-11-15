@@ -1,4 +1,4 @@
-import 'package:pokedex_mobile/menu.dart';
+import 'package:pokedex_mobile/screens/menu.dart';
 import 'package:flutter/material.dart';
 
 void main() {
