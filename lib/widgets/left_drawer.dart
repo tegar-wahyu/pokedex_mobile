@@ -70,7 +70,7 @@ class LeftDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PokeListPage(pokeList: pokeList),
+                    builder: (context) => const PokeListPage(),
                   ));
             },
           ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:pokedex_mobile/screens/login.dart';
 import 'package:pokedex_mobile/screens/pokedex_form.dart';
 import 'package:pokedex_mobile/screens/pokedex_show.dart';
+import 'package:provider/provider.dart';
 
 class PokeItem {
   final String name;
@@ -17,24 +20,17 @@ class PokeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Material(
       color: item.color,
       child: InkWell(
         // Area responsive terhadap sentuhan
-        onTap: () {
+        onTap: () async {
           // Memunculkan SnackBar ketika diklik
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
                 content: Text("Kamu telah menekan tombol ${item.name}!")));
-          if (item.name == "Lihat Pokemon") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PokeListPage(pokeList: pokeList),
-              ),
-            );
-          }
 
           if (item.name == "Tambah Pokemon") {
             Navigator.push(
@@ -43,6 +39,31 @@ class PokeCard extends StatelessWidget {
                 builder: (context) => const PokeFormPage(),
               ),
             );
+          }
+          else if (item.name == "Lihat Pokemon") {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const PokeListPage()));
+          }
+          else if (item.name == "Logout") {
+            final response = await request.logout(
+                "http://tegar-wahyu-tugas.pbp.cs.ui.ac.id/auth/logout/");
+            // final response = await request.logout(
+            //     "http://127.001:8000/auth/logout/");
+            String message = response["message"];
+            if (response['status']) {
+              String uname = response["username"];
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("$message Sampai jumpa, $uname."),
+              ));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(message),
+              ));
+            }
           }
         },
         child: Container(
